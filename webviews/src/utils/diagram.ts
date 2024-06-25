@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Avaiga Private Limited
+ * Copyright 2024 Avaiga Private Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -28,7 +28,7 @@ import createEngine, {
   DefaultNodeModelOptions,
 } from "@projectstorm/react-diagrams";
 import { BaseEvent, BaseEntityEvent } from "@projectstorm/react-canvas-core";
-import { debounce } from "debounce";
+import debounce from "debounce";
 
 import { SELECT } from "../../../shared/commands";
 import { DisplayModel, Positions, WebContext } from "../../../shared/diagram";

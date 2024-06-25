@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Avaiga Private Limited
+ * Copyright 2024 Avaiga Private Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,7 +14,7 @@
 import { ChangeEvent, MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import { CanvasWidget } from "@projectstorm/react-canvas-core";
 import DomToImage from "dom-to-image-more";
-import * as deepEqual from "fast-deep-equal";
+import deepEqual from "fast-deep-equal";
 import * as l10n from "@vscode/l10n";
 
 import { ConfigEditorProps, perspectiveRootId } from "../../../shared/views";

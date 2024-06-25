@@ -60,13 +60,13 @@
   "Enter an identifier for a new {0} element.": "Enter an identifier for a new {0} element.",
   "new {0} identifier": "new {0} identifier",
   "refresh": "refresh",
+  "Delete": "Delete",
+  "Create new property": "Create new property",
   "Re-layout": "Re-layout",
   "Refresh": "Refresh",
   "Save": "Save",
   "File saved": "File saved",
   "Save as PNG": "Save as PNG",
   "Zoom to fit": "Zoom to fit",
-  "Add {0}": "Add {0}",
-  "Delete": "Delete",
-  "Create new property": "Create new property"
+  "Add {0}": "Add {0}"
 }
