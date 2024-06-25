@@ -14,7 +14,7 @@
 import { ChangeEvent, MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import { CanvasWidget } from "@projectstorm/react-canvas-core";
 import DomToImage from "dom-to-image-more";
-import * as deepEqual from "fast-deep-equal";
+import deepEqual from "fast-deep-equal";
 import * as l10n from "@vscode/l10n";
 
 import { ConfigEditorProps, perspectiveRootId } from "../../../shared/views";

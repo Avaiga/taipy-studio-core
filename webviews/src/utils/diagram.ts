@@ -28,7 +28,7 @@ import createEngine, {
   DefaultNodeModelOptions,
 } from "@projectstorm/react-diagrams";
 import { BaseEvent, BaseEntityEvent } from "@projectstorm/react-canvas-core";
-import { debounce } from "debounce";
+import debounce from "debounce";
 
 import { SELECT } from "../../../shared/commands";
 import { DisplayModel, Positions, WebContext } from "../../../shared/diagram";
