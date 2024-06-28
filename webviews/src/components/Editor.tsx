@@ -12,6 +12,7 @@
  */
 
 import { ChangeEvent, MouseEvent, useCallback, useEffect, useRef, useState } from "react";
+import { Point } from '@projectstorm/geometry';
 import { CanvasWidget } from "@projectstorm/react-canvas-core";
 import DomToImage from "dom-to-image-more";
 import deepEqual from "fast-deep-equal";
@@ -128,7 +129,21 @@ const Editor = ({
     // add listener to Model
     model.registerListener(diagramListener);
 
-    if (needsPositions) {
+    const rects =
+      engine.getModel() &&
+      engine
+        .getModel()
+        .getNodes()
+        .reduce((pv, nm) => {
+          pv[nm.getID()] = nm.getPosition();
+          return pv;
+        }, {} as Record<string, Point>);
+    const hasPos = rects && Object.keys(rects).length;
+    if (hasPos) {
+      model.getNodes().forEach((nm) => rects[nm.getID()] && nm.setPosition(rects[nm.getID()]));
+    }
+
+    if (needsPositions && !hasPos) {
       setTimeout(relayout, 500);
     }
     engine.setModel(model);
