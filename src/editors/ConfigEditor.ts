@@ -93,7 +93,7 @@ import { ConfigDropEditProvider } from "../providers/DocumentDropEditProvider";
 import { getNodeNameValidationFunction } from "../utils/pythonSymbols";
 import { getLog } from "../utils/logging";
 import { getDefaultValues } from "../schema/validation";
-import { DataNode, PROP_SEQUENCES, Scenario, Sequence } from "../../shared/names";
+import { DataNode, PROP_DATANODES, PROP_SEQUENCES, PROP_TASKS, Scenario, Sequence, Task } from "../../shared/names";
 import { getChildTypes, getDescendantProperties } from "../../shared/nodeTypes";
 import { ConfigItem } from "../providers/ConfigNodesProvider";
 
@@ -563,6 +563,29 @@ export class ConfigEditorProvider implements CustomTextEditorProvider {
 
     if (!create && links.length === 0) {
       return edits;
+    }
+    // if link datanode/task, check the scenario additional list
+    if ((targetType === DataNode || sourceType === DataNode) && (targetType === Task || sourceType === Task)) {
+      const scenarios = getSymbol(symbols, Scenario);
+      if (scenarios) {
+        const [taskName, dnName] = nodeType === Task ? [nodeName, childName] : [childName, nodeName];
+        scenarios.children.find((sc) => {
+          const tasks = getSymbolArrayValue(realDocument, sc, PROP_TASKS);
+          if (tasks.some((t) => getUnsuffixedName(t) === taskName)) {
+            const additionalsSymbol = getSymbol(sc.children, PROP_DATANODES);
+            const additionals = additionalsSymbol && getSymbolArrayValue(realDocument, additionalsSymbol);
+            if (additionals) {
+              // remove dn from addtionals
+              const newAdd = additionals.filter((dn) => getUnsuffixedName(dn) !== dnName);
+              if (newAdd.length < additionals.length) {
+                edits.push(TextEdit.replace(additionalsSymbol.range, stringify.value(newAdd).trimEnd()));
+                return true;
+              }
+            }
+          }
+          return false;
+        });
+      }
     }
     if (linksSymbol) {
       const newLinks = create
