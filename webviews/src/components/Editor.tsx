@@ -12,7 +12,7 @@
  */
 
 import { ChangeEvent, MouseEvent, useCallback, useEffect, useRef, useState } from "react";
-import { Point } from '@projectstorm/geometry';
+import { Point } from "@projectstorm/geometry";
 import { CanvasWidget } from "@projectstorm/react-canvas-core";
 import DomToImage from "dom-to-image-more";
 import deepEqual from "fast-deep-equal";
@@ -42,6 +42,7 @@ import { applySmallChanges } from "../utils/smallModelChanges";
 import { DisplayModel, NodeName, ScenarioSequence } from "../../../shared/diagram";
 import { Sequence, Task } from "../../../shared/names";
 import { TaipyNodeModel } from "src/projectstorm/factories";
+import { DefaultNodeModel } from "@projectstorm/react-diagrams";
 
 const [engine, dagreEngine] = initDiagram();
 
@@ -135,12 +136,32 @@ const Editor = ({
         .getModel()
         .getNodes()
         .reduce((pv, nm) => {
-          pv[nm.getID()] = nm.getPosition();
+          pv[`${nm.getType()}.${(nm as DefaultNodeModel).getOptions().name}`] = nm.getPosition();
           return pv;
         }, {} as Record<string, Point>);
     const hasPos = rects && Object.keys(rects).length;
     if (hasPos) {
-      model.getNodes().forEach((nm) => rects[nm.getID()] && nm.setPosition(rects[nm.getID()]));
+      const noPosIds: string[] = [];
+      model.getNodes().forEach((nm) => {
+        const id = `${nm.getType()}.${(nm as DefaultNodeModel).getOptions().name}`;
+        if (rects[id]) {
+          nm.setPosition(rects[id]);
+          delete rects[id];
+        } else {
+          noPosIds.push(id);
+        }
+      });
+      if (noPosIds.length && Object.keys(rects).length) {
+        noPosIds.forEach((nodeId) => {
+          const [nodeType, nodeName] = nodeId.split(".", 2)
+          const rectKey = Object.keys(rects).find((rectId) => rectId.split(".", 2)[0] ==  nodeType);
+          if (rectKey) {
+            const node = model.getNodes().find(nm => nm.getType() == nodeType && (nm as DefaultNodeModel).getOptions().name == nodeName)
+            node?.setPosition(rects[rectKey]);
+          }
+        });
+        
+      }
     }
 
     if (needsPositions && !hasPos) {
